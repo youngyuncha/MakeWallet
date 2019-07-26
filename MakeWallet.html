@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+		<style>
+		body
+		{
+	 border: 1px solid red;
+	 
+	 background-image:url('./img/blockchain-illo1-background_blockchain-top2.png');
+	 
+	}
+	
+	
+
+		</style>
+		
+    </head>
+	
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src ="lib/web3.min.js"></script>
+	
+	
+	<script>
+	
+		var Web3 = require("web3")
+		web3 = new Web3();
+		web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"))
+		
+		
+	function balan(){
+			var _address = $('#account').val()
+				
+			var balance = web3.fromWei(web3.eth.getBalance(_address))
+				
+			$('#num2').val(balance)
+			}
+	
+	
+	
+	
+	
+		$(document).ready(function(){ //전체문서를 읽고 준비되면 끝까지 읽어라
+		
+	
+	
+			$('#payment').click(function(){   //event를 거는함수이고 input값이 바뀔떄마다 특정 함수를 작동시켜라
+			
+			
+			if(web3.personal.unlockAccount($('#account').val(), $('#psd').val())
+			){
+			
+			var transactionObj = {
+				from   : $('#account').val(),
+				to     : $('#rciv').val(),
+				value  : web3.toWei($('#valu').val())
+			}
+			
+			
+			web3.eth.sendTransaction(transactionObj, function(err,res){
+				if(err) {
+					console.log(err)
+				}else{
+					console.log(res)
+					}
+					
+					})
+			
+			}
+			
+			})
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			$('#newacbtn').click(function(){   
+			
+			var AA = web3.personal.newAccount($('#newac').val())
+
+			BB = '<option value="' + AA + '">' + AA + '</option>'
+				
+				alert('추가완료')
+				$('#newac').val('')
+				$('#account').append(BB)
+				$('#rciv').append(BB)
+				
+				
+			})
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			var account_list = web3.eth.accounts
+			
+			var html;
+			
+			account_list.forEach(function(address){   //account list에있는 것을 each 각자 하나하나 가져온다.
+			                                          //for- 11,22,33을 각자 한번식 함수구문을 실행한다-반복문
+				console.log(address)                   
+				
+				html ='<option value="' + address + '">' + address + '</option>'
+				
+				$('#account').append(html)
+				
+				
+		})
+		
+
+			balan()
+		
+	
+			$('#account').change(function(){
+			
+				balan()
+	
+			})
+			
+			
+			
+			account_list.forEach(function(address){   
+			                                          
+				console.log(address)                   
+				
+				html ='<option value="' + address + '">' + address + '</option>'
+				
+				$('#rciv').append(html)
+				
+				
+		})
+			
+			
+			
+			
+			
+			
+			
+			
+	
+			
+			
+			
+	})
+
+		
+	
+		
+	</script>
+	
+	
+	
+    <body>
+	
+		<table>
+	
+
+			<h1> wallet</h1>
+	  
+			<tr> 
+				<td id = "first" class = "class_div"><h4>accounts
+					</h4><select name="accounts" id = account>
+				</select></td>
+
+				<td><h4>Balance <br/>
+					<input type="text" id="num2" size="40" value="" readonly></h4></td>
+			</tr>
+			
+			<tr>
+				<td id = second><h4>receiver </h4>
+					<select name="receiver" id = rciv>
+				</select></td>
+					
+				<td><h4>VALUE <br/> <input type="text" id = "valu" size="40" value=""></h4></td>
+			</tr>	
+			
+			<tr>
+				<td ><h4>PASSWORD <br/> <input type="password" id="psd" size="40" value=""></h4></td>
+				<td><h4>anotherAC <br/> <input type="text" id = "AC" size="40" value=""></h4></td>
+			</tr>
+			<tr>
+				<td><button  id = "payment" >process payment</button></td>
+				<td><button  id = "ACpayment" >ACpayment</button></td>
+			</tr>
+
+			<tr>
+				<td><h4>NEW ACCOUNT <br/> <input type="text" id = "newac" = "" size="40" value=""></h4></td>
+				<td><button  id = "newacbtn" >계정생성</button></td>
+			</tr>
+		
+		</table>
+</body>
+</html>
